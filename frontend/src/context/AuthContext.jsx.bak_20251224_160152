@@ -1,0 +1,183 @@
+﻿// src/context/AuthContext.jsx
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+} from "react";
+import toast from "react-hot-toast";
+import { fetchToken, API_BASE } from "../api";
+
+const STORAGE_KEY = "dreamarc.auth";
+
+export const AuthContext = createContext(null);
+
+// 로딩 화면
+const LoadingScreen = () => (
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      height: "100vh",
+      width: "100vw",
+      backgroundColor: "#1a1a1a",
+      color: "white",
+      fontSize: "18px",
+      fontFamily: "Arial, sans-serif",
+    }}
+  >
+    <div>
+      <div style={{ textAlign: "center", marginBottom: "20px" }}>🦡</div>
+      Loading DreamARC...
+    </div>
+  </div>
+);
+
+export function AuthProvider({ children }) {
+  const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
+
+  // 처음 렌더 시, localStorage에서 유저 복구
+  useEffect(() => {
+    const checkStoredAuth = async () => {
+      try {
+        const storedUser = localStorage.getItem(STORAGE_KEY);
+        if (storedUser) {
+          const parsedUser = JSON.parse(storedUser);
+          if (parsedUser.access_token) {
+            setUser(parsedUser);
+          } else {
+            localStorage.removeItem(STORAGE_KEY);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to parse stored user:", err);
+        localStorage.removeItem(STORAGE_KEY);
+      } finally {
+        setAuthLoading(false);
+      }
+    };
+
+    checkStoredAuth();
+  }, []);
+
+  // 로그인
+  const login = async (username, password) => {
+    setAuthLoading(true);
+    try {
+      const userData = await fetchToken(username, password);
+
+      if (!userData?.access_token || !userData?.id || !userData?.name) {
+        console.error("Login response missing essential data:", userData);
+        throw new Error(
+          "Login failed: Incomplete user data received from server."
+        );
+      }
+
+      const enhancedUser = {
+        ...userData,
+        student_id: userData.id,
+        access_token: userData.access_token,
+        name: userData.name,
+        email: userData.email || username,
+      };
+
+      setUser(enhancedUser);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(enhancedUser));
+      toast.success(`Welcome back, ${enhancedUser.name}!`);
+
+      return enhancedUser;
+    } catch (err) {
+      console.error("AuthContext: login failed", err);
+      setUser(null);
+      localStorage.removeItem(STORAGE_KEY);
+      toast.error(err.message || "Login failed. Please try again.");
+      throw err;
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  // 회원가입 (간단 버전: username/password/grade 사용)
+  const register = async (username, password, grade) => {
+    setAuthLoading(true);
+    try {
+      if (!grade) {
+        throw new Error("Please select your grade before signing up.");
+      }
+
+      const response = await fetch(`${API_BASE}/api/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password, grade }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({
+          detail: "Registration failed. Invalid server response.",
+        }));
+        throw new Error(errorData.detail || "Registration failed.");
+      }
+
+      const userData = await response.json();
+
+      if (!userData?.access_token || !userData?.id || !userData?.name) {
+        console.error("Registration response missing essential data:", userData);
+        throw new Error(
+          "Registration failed: Incomplete user data received from server."
+        );
+      }
+
+      const enhancedUser = {
+        ...userData,
+        student_id: userData.id,
+        access_token: userData.access_token,
+        name: userData.name,
+        email: userData.email || username,
+        grade,
+      };
+
+      setUser(enhancedUser);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(enhancedUser));
+      toast.success(`Welcome, ${enhancedUser.name}!`);
+
+      return enhancedUser;
+    } catch (err) {
+      console.error("AuthContext: registration failed", err);
+      toast.error(err.message || "Registration failed. Please try again.");
+      throw err;
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  // 로그아웃
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem(STORAGE_KEY);
+    toast.success("Logged out successfully");
+  };
+
+  const value = {
+    user,
+    authLoading,
+    login,
+    logout,
+    register,
+  };
+
+  return (
+    <AuthContext.Provider value={value}>
+      {authLoading ? <LoadingScreen /> : children}
+    </AuthContext.Provider>
+  );
+}
+
+export function useAuth() {
+  const ctx = useContext(AuthContext);
+  if (!ctx) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return ctx;
+}
