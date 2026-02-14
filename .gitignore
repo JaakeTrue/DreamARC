@@ -4,3 +4,131 @@ backend/*.db
 backend/*.sqlite
 backend/*.sqlite3
 
+
+# =========================
+# DreamARC - Enhanced ignore
+# =========================
+
+# Node / Vite / React
+node_modules/
+**/node_modules/
+dist/
+build/
+out/
+.vite/
+.cache/
+*.tsbuildinfo
+
+# Logs
+*.log
+logs/
+**/logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+Desktop.ini
+.vscode/
+.idea/
+
+# Python
+.venv/
+venv/
+ENV/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local env / secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.pfx
+secrets*.json
+credentials*.json
+
+# Local databases
+*.db
+*.sqlite
+*.sqlite3
+backend/*.db
+backend/*.sqlite
+backend/*.sqlite3
+
+# Optional: lock down big generated assets (uncomment if you generate these)
+# *.zip
+# *.7z
+
+
+# =========================
+# DreamARC - Enhanced ignore
+# =========================
+
+# Node / Vite / React
+node_modules/
+**/node_modules/
+dist/
+build/
+out/
+.vite/
+.cache/
+*.tsbuildinfo
+
+# Logs
+*.log
+logs/
+**/logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+Desktop.ini
+.vscode/
+.idea/
+
+# Python
+.venv/
+venv/
+ENV/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local env / secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.pfx
+secrets*.json
+credentials*.json
+
+# Local databases
+*.db
+*.sqlite
+*.sqlite3
+backend/*.db
+backend/*.sqlite
+backend/*.sqlite3
+
