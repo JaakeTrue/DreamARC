@@ -62,3 +62,7 @@ backend/*.sqlite3
 # Optional: archives
 # *.zip
 # *.7z
+
+# local backups
+*.bak_*
+

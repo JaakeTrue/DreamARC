@@ -229,39 +229,39 @@ async def tutor_request(req: LearningRequest, db: sqlite3.Connection = Depends(g
 
                 if (not image_data) or (not hasattr(openai_client, "responses")):
                     # Fallback: proceed as text-only (still try)
-    # --- A2G CONTEXTUAL MEMORY (Big Brother/Sister Logic) ---
-    # 1. Fetch recent life context (Diary)
-    life_log = db.execute("SELECT content FROM diary_entries WHERE student_id=? ORDER BY created_at DESC LIMIT 1", (req.student_id,)).fetchone()
+                    # --- A2G CONTEXTUAL MEMORY (Big Brother/Sister Logic) ---
+                    # 1. Fetch recent life context (Diary)
+                    life_log = db.execute("SELECT content FROM diary_entries WHERE student_id=? ORDER BY created_at DESC LIMIT 1", (req.student_id,)).fetchone()
     
-    # 2. Fetch recent struggles (High Lambda topics from last 7 days)
-    past_struggles = db.execute("SELECT topic FROM lambda_logs WHERE student_id=? AND lambda_val > 3.5 ORDER BY timestamp DESC LIMIT 1", (req.student_id,)).fetchone()
+                    # 2. Fetch recent struggles (High Lambda topics from last 7 days)
+                    past_struggles = db.execute("SELECT topic FROM lambda_logs WHERE student_id=? AND lambda_val > 3.5 ORDER BY timestamp DESC LIMIT 1", (req.student_id,)).fetchone()
     
-    memory_context = "\n[SYSTEM MEMORY ADVICE]: "
-    if life_log: memory_context += f"The student recently mentioned: '{life_log['content']}'. "
-    if past_struggles: memory_context += f"They struggled with '{past_struggles['topic']}' recently; check if they've recovered. "
+                    memory_context = "\n[SYSTEM MEMORY ADVICE]: "
+                    if life_log: memory_context += f"The student recently mentioned: '{life_log['content']}'. "
+                    if past_struggles: memory_context += f"They struggled with '{past_struggles['topic']}' recently; check if they've recovered. "
     
-    # Inject memory into the system prompt
-    clean_history[0]["content"] += memory_context
-    # --- A2G CONTEXTUAL MEMORY (Big Brother/Sister Logic) ---
-    # 1. Fetch recent life context (Diary)
-    life_log = db.execute("SELECT content FROM diary_entries WHERE student_id=? ORDER BY created_at DESC LIMIT 1", (req.student_id,)).fetchone()
+                    # Inject memory into the system prompt
+                    clean_history[0]["content"] += memory_context
+                    # --- A2G CONTEXTUAL MEMORY (Big Brother/Sister Logic) ---
+                    # 1. Fetch recent life context (Diary)
+                    life_log = db.execute("SELECT content FROM diary_entries WHERE student_id=? ORDER BY created_at DESC LIMIT 1", (req.student_id,)).fetchone()
     
-    # 2. Fetch recent struggles (High Lambda topics from last 7 days)
-    past_struggles = db.execute("SELECT topic FROM lambda_logs WHERE student_id=? AND lambda_val > 3.5 ORDER BY timestamp DESC LIMIT 1", (req.student_id,)).fetchone()
+                    # 2. Fetch recent struggles (High Lambda topics from last 7 days)
+                    past_struggles = db.execute("SELECT topic FROM lambda_logs WHERE student_id=? AND lambda_val > 3.5 ORDER BY timestamp DESC LIMIT 1", (req.student_id,)).fetchone()
     
-    memory_context = "\n[SYSTEM MEMORY ADVICE]: "
-    if life_log: memory_context += f"The student recently mentioned: '{life_log['content']}'. "
-    if past_struggles: memory_context += f"They struggled with '{past_struggles['topic']}' recently; check if they've recovered. "
+                    memory_context = "\n[SYSTEM MEMORY ADVICE]: "
+                    if life_log: memory_context += f"The student recently mentioned: '{life_log['content']}'. "
+                    if past_struggles: memory_context += f"They struggled with '{past_struggles['topic']}' recently; check if they've recovered. "
     
-    # Inject memory into the system prompt
-    clean_history[0]["content"] += memory_context
+                    # Inject memory into the system prompt
+                    clean_history[0]["content"] += memory_context
                     resp = await openai_client.chat.completions.create(
                         model=LLM_MODEL,
                         messages=req.history
                     )
                     ai_text = resp.choices[0].message.content or ""
                     final_response = ai_text
-                else:
+                    else:
                     r = await openai_client.responses.create(
                         model=LLM_MODEL,
                         input=[{
