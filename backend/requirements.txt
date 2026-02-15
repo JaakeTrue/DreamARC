@@ -5,3 +5,7 @@ python-jose[cryptography]
 google-generativeai
 requests
 python-multipart
+
+fastapi>=0.110.0
+starlette>=0.36.0
+typing-extensions>=4.8.0
