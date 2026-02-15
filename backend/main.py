@@ -261,20 +261,20 @@ async def tutor_request(req: LearningRequest, db: sqlite3.Connection = Depends(g
                     )
                     ai_text = resp.choices[0].message.content or ""
                     final_response = ai_text
-                    else:
-                    r = await openai_client.responses.create(
-                        model=LLM_MODEL,
-                        input=[{
-                            "role": "user",
-                            "content": [
-                                {"type": "input_text", "text": vision_prompt},
-                                {"type": "input_image", "image_url": image_data}
-                            ]
-                        }],
-                        max_output_tokens=900
-                    )
-                    ai_text = getattr(r, "output_text", "") or ""
-                    final_response = ai_text
+                else:
+                r = await openai_client.responses.create(
+                    model=LLM_MODEL,
+                    input=[{
+                        "role": "user",
+                        "content": [
+                            {"type": "input_text", "text": vision_prompt},
+                            {"type": "input_image", "image_url": image_data}
+                        ]
+                    }],
+                    max_output_tokens=900
+                )
+                ai_text = getattr(r, "output_text", "") or ""
+                final_response = ai_text
 
             else:
                 # Normal Samie text chat
