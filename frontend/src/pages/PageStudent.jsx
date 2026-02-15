@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState, useMemo, useRef } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import remarkMath from "remark-math";
@@ -16,8 +16,8 @@ import {
   Cell
 } from "recharts";
 
-import { API_BASE } from "../api";
 import SamieGraph from "./SamieGraph"; 
+import { API_BASE } from "../api";
 
 // =================================================================================
 // 🧠 SAMIE'S "GAME CHANGER" PROTOCOL (System Prompt)
@@ -758,3 +758,6 @@ export default function PageStudent() {
     </div>
   );
 }
+
+
+
