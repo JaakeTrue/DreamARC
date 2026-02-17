@@ -1,31 +1,28 @@
+# Node / Vite
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/node_modules/.vite/
+
 # Python
-__pycache__/
+backend/.venv/
+**/__pycache__/
 *.pyc
-.venv/
-venv/
-.env
-.env.*
-*.sqlite
-*.db
 
-# Node
-node_modules/
-dist/
-build/
-.vite/
+# Env / secrets
+**/.env
+**/.env.local
+**/.env.*.local
 
-# OS / IDE
-.DS_Store
-Thumbs.db
-.vscode/
-.idea/
+# Local DB / data
+backend/*.db
+backend/*.sqlite
+backend/*.sqlite3
 
 # Logs
 *.log
 
-# Local backups
+# Backups created during patching
 *.bak
-*.BAK*
 *.bak_*
-*.BAK_*
-
+*.BAK*
