@@ -583,3 +583,4 @@ def startup():
     setup_database()
     seed_default_users()
     logger.info("🚀 DreamARC Hybrid Server Restored")
+
