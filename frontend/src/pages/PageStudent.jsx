@@ -16,7 +16,7 @@ import {
   Cell
 } from "recharts";
 
-import SamieGraph from "./SamieGraph"; 
+import SamieGraph from "../components/SamieGraph.jsx"; 
 import { API_BASE } from "../api";
 
 // =================================================================================
@@ -758,6 +758,7 @@ export default function PageStudent() {
     </div>
   );
 }
+
 
 
 
