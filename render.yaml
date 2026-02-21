@@ -2,7 +2,15 @@ services:
   - type: web
     name: dreamarc-backend
     env: python
+    rootDir: backend
     plan: free
-    buildCommand: pip install -r backend/requirements.txt
-    startCommand: python -m uvicorn backend.main:app --host 0.0.0.0 --port \
-    autoDeploy: true
+    buildCommand: pip install -r requirements.txt
+    startCommand: bash start.sh
+    healthCheckPath: /health
+    disk:
+      name: dreamarc-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: DB_PATH
+        value: /var/data/dreamarc.db
