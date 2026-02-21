@@ -48,6 +48,12 @@ if AsyncOpenAI:
 
 app = FastAPI(title="DreamARC", version="8.9 Fixed-Login")
 
+@app.get("/")
+def root():
+    return {"service":"DreamARC","status":"running"}
+@app.get("/")
+def root():
+    return {"service":"DreamARC","status":"running"}
 @app.get("/health")
 def health():
     return {"status": "ok"}
@@ -583,4 +589,6 @@ def startup():
     setup_database()
     seed_default_users()
     logger.info("🚀 DreamARC Hybrid Server Restored")
+
+
 
